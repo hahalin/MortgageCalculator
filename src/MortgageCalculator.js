@@ -52,6 +52,14 @@ function MortgageCalculator() {
         setPayments([]);
     }
 
+    const formatter = new Intl.NumberFormat('zh-TW', {
+        style: 'decimal',
+        maximumFractionDigits: 2,
+    });
+    
+    //const formattedNumber = formatter.format(number);
+    
+
     return (
         <div className="container mt-5 col-md-12">
             <h2>房貸計算器</h2>        
@@ -88,7 +96,7 @@ function MortgageCalculator() {
                     {/* 根據 payments 顯示計算結果 */}
 
                     {payments.length > 0 && repaymentType === "interest" && (
-                        <h3>每月付款額：{payments[0].totalPayment.toFixed(2)} 元</h3>
+                        <h3>每月付款額：{formatter.format(payments[0].totalPayment.toFixed(0))} 元</h3>
                     )}
 
                     {payments.length > 0 && repaymentType === "principal" && (
@@ -105,9 +113,9 @@ function MortgageCalculator() {
                                 {payments.map((payment, index) => (
                                     <tr key={index}>
                                         <td>{payment.month}</td>
-                                        {payment.principal && <td>{payment.principal.toFixed(2)}</td>}
-                                        {payment.interest && <td>{payment.interest.toFixed(2)}</td>}
-                                        {payment.totalPayment && <td>{payment.totalPayment.toFixed(2)}</td>}
+                                        {payment.principal && <td>{formatter.format(payment.principal.toFixed(0))}</td>}
+                                        {payment.interest && <td>{formatter.format(payment.interest.toFixed(0))}</td>}
+                                        {payment.totalPayment && <td>{formatter.format(payment.totalPayment.toFixed(0))}</td>}
                                     </tr>
                                 ))}
                             </tbody>
