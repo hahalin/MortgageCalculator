@@ -8,6 +8,9 @@
 ### 本金攤還
 ![alt text](https://github.com/hahalin/MortgageCalculator/blob/main/screenShots/2.png)
 
+## Add Bootstrap
+`npm install bootstrap`
+
 ## Available Scripts
 
 In the project directory, you can run:

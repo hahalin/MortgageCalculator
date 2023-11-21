@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { calculatePMT, calculateEqualPrincipal } from './mortgageCalculations';
+import PaymentScheduleTable from './PaymentScheduleTable';
+
 
 function MortgageCalculator() {
     const [loanAmount, setLoanAmount] = useState('1000000');
@@ -7,29 +10,6 @@ function MortgageCalculator() {
     const [interestRate, setInterestRate] = useState('1.565');
     const [repaymentType, setRepaymentType] = useState('interest');
     const [payments, setPayments] = useState([]);
-
-    const calculatePMT = (loanAmount, years, interestRate) => {
-        const principal = parseFloat(loanAmount);
-        const calculateRate = parseFloat(interestRate) / 100 / 12;
-        const nper = parseFloat(years) * 12;
-        const pvif = Math.pow(1 + calculateRate, nper);
-        return (calculateRate / (pvif - 1)) * (principal * pvif);
-    }
-
-    const calculateEqualPrincipal = (loanAmount, years, interestRate) => {
-        const monthlyPrincipal = loanAmount / (years * 12);
-        let balance = loanAmount;
-        let paymentSchedule = [];
-
-        for (let month = 1; month <= years * 12; month++) {
-            let monthlyInterest = balance * (interestRate / 100 / 12);
-            let totalPayment = monthlyPrincipal + monthlyInterest;
-            paymentSchedule.push({ month, principal: monthlyPrincipal, interest: monthlyInterest, totalPayment });
-            balance -= monthlyPrincipal;
-        }
-
-        return paymentSchedule;
-    };
 
 
     const handleSubmit = (event) => {
@@ -55,10 +35,7 @@ function MortgageCalculator() {
     const formatter = new Intl.NumberFormat('zh-TW', {
         style: 'decimal',
         maximumFractionDigits: 2,
-    });
-    
-    //const formattedNumber = formatter.format(number);
-    
+    });    
 
     return (
         <div className="container mt-5 col-md-12">
@@ -100,26 +77,7 @@ function MortgageCalculator() {
                     )}
 
                     {payments.length > 0 && repaymentType === "principal" && (
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>月份</th>
-                                    <th>本金</th>
-                                    <th>利息</th>
-                                    <th>總付款</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {payments.map((payment, index) => (
-                                    <tr key={index}>
-                                        <td>{payment.month}</td>
-                                        {payment.principal && <td>{formatter.format(payment.principal.toFixed(0))}</td>}
-                                        {payment.interest && <td>{formatter.format(payment.interest.toFixed(0))}</td>}
-                                        {payment.totalPayment && <td>{formatter.format(payment.totalPayment.toFixed(0))}</td>}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                        <PaymentScheduleTable payments={payments} formatter={formatter} />
                     )}
                 </div>
             </div>    
